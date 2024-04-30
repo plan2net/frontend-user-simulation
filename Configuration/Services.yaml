@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Plan2net\FrontendUserSimulation\OnModifyRecordListRecordActions:
+    tags:
+      - name: event.listener
+        identifier: 'frontend-user-simulation/recordlist/add-simulation-action'
+        method: 'modifyRecordActions'
+
+  Plan2net\FrontendUserSimulation\FrontendSimulationAuthenticationService:
+    public: true
+  Plan2net\FrontendUserSimulation\VerificationHashService:
+    public: true

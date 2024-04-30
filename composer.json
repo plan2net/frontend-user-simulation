@@ -1,0 +1,19 @@
+{
+  "name": "plan2net/frontend-user-simulation",
+  "description": "Frontend user simulation",
+  "require": {
+    "typo3/cms-core": "^12"
+  },
+  "version": "1.0.0",
+  "type": "typo3-cms-extension",
+  "autoload": {
+    "psr-4": {
+      "Plan2net\\FrontendUserSimulation\\": "Classes"
+    }
+  },
+  "extra": {
+    "typo3/cms" : {
+      "extension-key" : "frontend_user_simulation"
+    }
+  }
+}
