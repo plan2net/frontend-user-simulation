@@ -7,7 +7,9 @@ namespace Plan2net\FrontendUserSimulation;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Exception\SiteNotFoundException;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final readonly class OnModifyRecordListRecordActions
@@ -41,20 +43,25 @@ final readonly class OnModifyRecordListRecordActions
     {
         $iconFactory = GeneralUtility::makeInstance('TYPO3\CMS\Core\Imaging\IconFactory');
         $switchUserIcon = $iconFactory->getIcon('actions-system-backend-user-switch', Icon::SIZE_SMALL)->render();
-        $url = $this->getSimulationUrlFor($event->getRecord()['uid']);
+        $url = $this->getSimulationUrlFor($event->getRecord()['uid'], $event->getRecord()['pid']);
 
         return '<a  href="' . $url . '" target="_blank" class="btn btn-default">' . $switchUserIcon . '</a>';
     }
 
-    private function getSimulationUrlFor(int $userId): string
+    /**
+     * @throws SiteNotFoundException
+     */
+    private function getSimulationUrlFor(int $userId, int $pageId): string
     {
         $cookieName = BackendUserAuthentication::getCookieName();
         $sessionId = $_COOKIE[$cookieName];
         $arguments['userid'] = (string) $userId;
         $arguments['timeout'] = (string) (time() + 3600);
         $arguments['verification'] = $this->verificationHashService->generateVerificationHash($sessionId, $arguments);
+        $siteFinder = new SiteFinder();
+        $site = $siteFinder->getSiteByPageId($pageId);
 
-        return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . '?' .
+        return $site->getBase() . '?' .
             GeneralUtility::implodeArrayForUrl('tx_frontendusersimulation', $arguments);
     }
 }
