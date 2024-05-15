@@ -1,5 +1,6 @@
 <?php
 
+use Plan2net\FrontendUserSimulation\Backend\Middleware\BackendUserAuthenticator;
 use Plan2net\FrontendUserSimulation\Frontend\Middleware\FrontendUserAuthenticator;
 use Plan2net\FrontendUserSimulation\FrontendSimulationAuthenticationService;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -22,4 +23,8 @@ ExtensionManagementUtility::addService(
 // Trigger authentication without setting FE_alwaysFetchUser globally
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][TYPO3\CMS\Frontend\Middleware\FrontendUserAuthenticator::class] = [
     'className' => FrontendUserAuthenticator::class
+];
+
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][TYPO3\CMS\Backend\Middleware\BackendUserAuthenticator::class] = [
+    'className' => BackendUserAuthenticator::class
 ];
